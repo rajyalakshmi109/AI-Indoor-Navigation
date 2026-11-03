@@ -231,9 +231,12 @@ API_URL = "https://ai-indoor-navigation.onrender.com"
 
 ### Android Application Setup
 
-Open the Android project in Android Studio, build and install the application on a compatible phone, grant the required permissions, and configure the Flask API address.
-
-For local testing, the phone and computer must be connected to a network that allows the phone to reach the computer's IP address and Flask port. For deployed testing, configure the application to use the Render service URL.
+1. Open the Android project in Android Studio.
+2. Build and install the application on a compatible Android phone.
+3. Grant the required permissions when prompted.
+4. Configure the Flask API address in the application.
+5. For local testing, connect the phone and computer to a network that allows the phone to reach the computer's IP address and Flask port.
+6. For deployed testing, configure the application to use the Render service URL.
 
 ## Repository Structure
 
