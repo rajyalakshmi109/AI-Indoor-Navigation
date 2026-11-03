@@ -1,328 +1,253 @@
 # AI-Based Indoor Navigation Using Wi-Fi Fingerprinting
 
-> An academic prototype for indoor localization and shortest-path
-> navigation in a two-floor college building using Wi-Fi fingerprints,
-> machine learning and graph algorithms.
+> An academic prototype that estimates a user's location inside a two-floor college building using Wi-Fi fingerprinting and machine learning, then calculates a route to a selected destination.
 
-## Project at a glance
+## Project Overview
 
-  Item                     Details
-  ------------------------ -------------------------------------------
-  Localization approach    Wi-Fi fingerprinting using BSSID and RSSI
-  Machine-learning model   Random Forest classifier
-  Navigation algorithm     Dijkstra's shortest path
-  Mobile client            Android application (Kotlin)
-  Backend                  Flask REST API
-  Dashboard                Streamlit
-  Mapped environment       10 reference locations across 2 floors
-  Fingerprint features     48 BSSID features
-  Collected dataset        102 labelled fingerprints
+GPS signals can be weakened or blocked by roofs and walls, making reliable indoor positioning difficult. This project explores Wi-Fi fingerprinting as an alternative.
 
-## Live demo and repository
+The Android application scans nearby Wi-Fi access points and collects their **BSSID** and **RSSI** values. A Flask backend processes these readings and uses a trained **Random Forest classifier** to predict the user's indoor location. A graph-based navigation module then applies **Dijkstra's algorithm** to find a minimum-cost route to the selected destination.
 
--   **Live Streamlit dashboard:**
-    https://ai-indoor-navigation-axpyw4ffwhpq2zjte3acax.streamlit.app
--   **Flask API health check:**
-    https://ai-indoor-navigation.onrender.com/health
--   **Source code:**
-    https://github.com/rajyalakshmi109/AI-Indoor-Navigation
+### Main Components
 
-The dashboard provides a Demo Mode. Live Wi-Fi operation requires scans
-from the mapped college-building environment. The free backend service
-may take some time to wake after inactivity.
+- **Android application:** Scans nearby Wi-Fi access points and lets users select a destination.
+- **Flask REST API:** Receives Wi-Fi readings and returns location predictions and navigation routes.
+- **Random Forest model:** Classifies the user's current indoor location.
+- **Dijkstra navigation:** Calculates a minimum-cost path through the mapped building.
+- **Streamlit dashboard:** Displays location predictions, floor maps, routes and walking instructions.
 
-## 1. Problem statement
+## Live Demo
 
-GPS signals can be weakened or blocked by roofs and walls, making
-reliable room-level positioning difficult indoors. This project explores
-Wi-Fi fingerprinting as an alternative way to estimate a user's location
-within a mapped building and guide them to a selected destination.
+- **Streamlit dashboard:** https://ai-indoor-navigation-axpyw4ffwhpq2zjte3acax.streamlit.app
+- **Flask API health check:** https://ai-indoor-navigation.onrender.com/health
+- **GitHub repository:** https://github.com/rajyalakshmi109/AI-Indoor-Navigation
 
-## 2. Project objectives
+The dashboard includes a Demo Mode. Live Wi-Fi operation requires scans from the mapped college-building environment. The hosted backend may take some time to respond after a period of inactivity because the free service can go to sleep.
 
-1.  Collect labelled Wi-Fi fingerprints at known indoor locations.
-2.  Preprocess and align Wi-Fi scan data into a consistent feature set.
-3.  Train and evaluate a machine-learning model for indoor location
-    classification.
-4.  Integrate Android Wi-Fi scanning with a Flask backend.
-5.  Calculate a minimum-cost route to a selected destination.
-6.  Display the predicted location, route map and walking instructions.
+## System Workflow
 
-## 3. System architecture and workflow
-
-``` text
+```text
 Android application
-       |
-       | Wi-Fi scan: BSSID + RSSI
-       v
-Flask REST API
-       |
-       | Validate readings and align 48 features
-       v
-Random Forest localization model
-       |
-       | Predicted indoor location
-       v
-Dijkstra route planning
-       |
-       | Route, approximate distance, instructions
-       v
-Streamlit dashboard / Android result screen
+        |
+        | Wi-Fi scan: BSSID + RSSI
+        v
+     Flask API
+        |
+        | Validate and align Wi-Fi readings
+        v
+ Random Forest model
+        |
+        | Predicted indoor location
+        v
+ Dijkstra route planning
+        |
+        | Route, approximate distance,
+        | and walking instructions
+        v
+ Streamlit dashboard / Android app
 ```
 
-### End-to-end workflow
+### Workflow Steps
 
-1.  The Android application scans nearby Wi-Fi access points and
-    collects BSSID/RSSI readings.
-2.  The app sends the readings and selected destination to the Flask
-    `/navigate` endpoint.
-3.  The backend aligns observed BSSIDs to the model's fixed 48-feature
-    order. Missing trained access points are represented as `-100 dBm`.
-4.  The Random Forest model predicts one of the labelled indoor
-    locations and returns a confidence estimate.
-5.  The navigation module uses Dijkstra's algorithm on the indoor
-    connectivity graph to calculate a minimum-cost route.
-6.  The API returns the predicted location, destination, route,
-    approximate distance and walking instructions.
-7.  The Streamlit dashboard displays the prediction, floor map,
-    highlighted route and instructions.
+1. The Android application scans nearby Wi-Fi access points and collects their BSSID and RSSI values.
+2. The application sends the scan readings and selected destination to the Flask `/navigate` endpoint.
+3. The backend aligns the readings to the model's fixed set of 48 BSSID features. Missing access points are represented as `-100 dBm`.
+4. The Random Forest model predicts the current labelled location and provides a confidence estimate.
+5. The navigation module uses Dijkstra's algorithm on the indoor connectivity graph to calculate a minimum-cost route.
+6. The API returns the predicted location, destination, route, approximate distance and walking instructions.
+7. The Streamlit dashboard displays the prediction, floor map, highlighted route and directions.
 
-## 4. Dataset and preprocessing
+## Dataset
 
-The collected dataset contains **102 labelled Wi-Fi fingerprints** from
-**10 reference locations** across **two floors**.
+The collected dataset contains:
 
-A fingerprint represents one Wi-Fi scan captured at a known location.
+| Dataset detail | Value |
+|---|---:|
+| Labelled fingerprints | 102 |
+| Reference locations | 10 |
+| Floors | 2 |
+| BSSID feature columns | 48 |
+| Training fingerprints | 82 |
+| Held-out test fingerprints | 20 |
 
--   **BSSID:** identifies a Wi-Fi access point.
--   **RSSI:** represents received signal strength, measured in dBm.
--   **Feature alignment:** every scan is represented using the same 48
-    BSSID feature columns.
--   **Missing access points:** represented as `-100 dBm`.
--   **Target label:** the known location where the scan was collected.
+A **Wi-Fi fingerprint** is a scan captured at a known location.
 
-### Session-based train/test split
+- **BSSID:** Identifies a Wi-Fi access point.
+- **RSSI:** Represents the received signal strength, measured in dBm.
+- **Feature alignment:** Every scan is represented using the same 48 BSSID feature columns.
+- **Missing access points:** Represented using `-100 dBm`.
+- **Target label:** The known location where the scan was collected.
 
-  Collection sessions   Use                  Fingerprints
-  --------------------- ------------------ --------------
-  Sessions 1--2         Training                       82
-  Sessions 3--4         Held-out testing               20
-  **Total**                                       **102**
+### Session-Based Train/Test Split
 
-The test sessions were collected separately from the training sessions
-to evaluate the model on later collection sessions rather than randomly
-mixing scans.
+| Collection sessions | Purpose | Number of fingerprints |
+|---|---|---:|
+| Sessions 1–2 | Training | 82 |
+| Sessions 3–4 | Held-out testing | 20 |
+| **Total** | | **102** |
 
-> **Dataset limitation:** 102 fingerprints is a small dataset for 10
-> locations. The held-out test set contains only two samples per
-> location, so individual errors can substantially affect per-location
-> metrics.
+The test sessions were kept separate from the training sessions to evaluate the model on later collection sessions rather than randomly mixing scans.
 
-## 5. Localization model
+> **Dataset limitation:** The dataset is relatively small. The held-out test set contains only two samples per location, so the reported metrics should be interpreted as preliminary results rather than a definitive measure of building-wide performance.
 
-A **Random Forest classifier** maps the aligned RSSI fingerprint to one
-of the labelled indoor locations. It is the model used in the live
-localization pipeline.
+## Localization Model
 
-### Why Random Forest?
+A **Random Forest classifier** is used in the live localization pipeline. It predicts one of the labelled indoor locations from the aligned Wi-Fi RSSI fingerprint.
 
--   Uses an ensemble of decision trees.
--   Can model non-linear relationships between Wi-Fi signal features.
--   Works with structured, tabular feature data.
--   Provides class-probability estimates that can support a
-    confidence-aware interface.
+Random Forest is an ensemble learning method that combines predictions from multiple decision trees. It can model non-linear relationships in structured data and provides class-probability estimates that can be used as a confidence indicator.
 
-An Artificial Neural Network (ANN) was explored separately; it was not
-the live model used for the reported test.
+An Artificial Neural Network (ANN) was also explored separately, but it was not the live model used for the results reported below.
 
-## 6. Route planning with Dijkstra's algorithm
+## Navigation Using Dijkstra's Algorithm
 
 The mapped building is represented as a graph:
 
--   **Nodes** represent mapped indoor locations.
--   **Edges** represent walkable connections.
--   **Edge weights** represent approximate travel distance or cost.
--   **Floor transitions** are represented explicitly as graph
-    connections.
+- **Nodes** represent mapped indoor locations.
+- **Edges** represent walkable connections between locations.
+- **Edge weights** represent approximate travel distance or cost.
+- **Floor transitions** are represented as graph connections.
 
-Dijkstra's algorithm finds a minimum-cost path from the predicted
-current location to the selected destination.
+Dijkstra's algorithm calculates a minimum-cost path from the predicted current location to the selected destination.
 
-**Example route observed in the project:**
+### Example Route
 
-``` text
+```text
 Ground Floor Study Hall Centre
-        |
-        v
+              |
+              v
 Ground Floor Study Hall 2 Entrance
-        |
-        v
+              |
+              v
 Ground Floor Library Entrance
 ```
 
-The example route was approximately **9 m** according to the graph. This
-is an approximate schematic graph distance, not a surveyed
-physical-distance guarantee.
+The example route observed during testing was approximately **9 metres** according to the graph. This is an approximate graph distance, not a surveyed physical-distance guarantee.
 
-## 7. Technology stack
+## Technology Stack
 
-  -----------------------------------------------------------------------
-  Component               Technology              Purpose
-  ----------------------- ----------------------- -----------------------
-  Mobile application      Kotlin / Android        Wi-Fi scanning and
-                                                  destination selection
+| Component | Technology | Purpose |
+|---|---|---|
+| Mobile application | Kotlin / Android | Wi-Fi scanning and destination selection |
+| Backend | Python / Flask | Receive scans and return predictions and routes |
+| Machine learning | Scikit-learn / Random Forest | Indoor location classification |
+| Data processing | Pandas / NumPy | Dataset cleaning and transformation |
+| Route planning | NetworkX / Dijkstra | Graph-based shortest-path calculation |
+| Dashboard | Streamlit | Display predictions, maps and directions |
+| Visualization | Matplotlib | Floor-map and route visualization |
+| Deployment | Render / Streamlit Community Cloud | Host backend and dashboard |
 
-  Backend API             Python / Flask          Receive scans and
-                                                  return
-                                                  predictions/routes
+## Evaluation Results
 
-  Localization            Scikit-learn / Random   Predict indoor location
-                          Forest                  
+### Offline Session-Based Evaluation
 
-  Data processing         Pandas / NumPy          Clean and transform
-                                                  fingerprints
+The Random Forest model was trained using 82 fingerprints from Sessions 1–2 and evaluated using 20 held-out fingerprints from Sessions 3–4.
 
-  Route planning          NetworkX / Dijkstra     Compute minimum-cost
-                                                  route
+| Metric | Result |
+|---|---:|
+| Correct predictions | 16 / 20 |
+| Accuracy | **80%** |
+| Macro precision | 70% |
+| Macro recall | 80% |
+| Macro F1-score | 73.33% |
 
-  Dashboard               Streamlit               Display prediction,
-                                                  maps and directions
+### Live Location Checks
 
-  Visualization           Matplotlib              Draw floor maps and
-                                                  highlighted routes
+During the reported live college-building demonstration, **9 out of 10** tested locations were predicted correctly. One location was misclassified.
 
-  Deployment              Render / Streamlit      Host backend and
-                          Community Cloud         dashboard
-  -----------------------------------------------------------------------
+This is an observed demonstration result, not a statistically established 90% building-wide accuracy. It should be considered separately from the offline session-based evaluation.
 
-## 8. Evaluation results
+Some live scans matched only 1–3 of the 48 trained BSSIDs. Low feature overlap can reduce prediction reliability, particularly when scanning outside the mapped building or in a different radio environment.
 
-### Offline session-based model evaluation
+## API Endpoints
 
-  Metric                   Result
-  --------------------- ---------
-  Correct predictions     16 / 20
-  Accuracy                **80%**
-  Macro precision             70%
-  Macro recall                80%
-  Macro F1-score           73.33%
+| HTTP method | Endpoint | Purpose |
+|---|---|---|
+| `GET` | `/health` | Check whether the API is running |
+| `GET` | `/destinations` | Retrieve selectable destinations |
+| `POST` | `/predict` | Predict a location from Wi-Fi readings |
+| `GET` | `/live-location` | Retrieve the latest live prediction |
+| `POST` | `/navigate` | Predict the location and calculate a route |
 
-The Random Forest model was trained on 82 fingerprints from Sessions
-1--2 and evaluated on 20 held-out fingerprints from Sessions 3--4.
+The Android application sends a JSON request containing `scan_readings` and `destination` to the `/navigate` endpoint.
 
-### Live location checks
-
-During the reported live college-building checks, **9 of 10** tested
-locations were predicted correctly. One location was misclassified.
-
-This is an observed demonstration result, not a statistically
-established 90% building-wide accuracy. It should be considered
-separately from the offline session-based test.
-
-### Interpretation
-
-Some live scans matched only 1--3 of the 48 trained BSSIDs. Low feature
-overlap can make predictions less reliable, particularly when the scan
-is taken outside the mapped building or in a different radio
-environment.
-
-## 9. API endpoints
-
-  HTTP method   Endpoint           Purpose
-  ------------- ------------------ ----------------------------------------
-  `GET`         `/health`          Check whether the API is running
-  `GET`         `/destinations`    Retrieve selectable destinations
-  `POST`        `/predict`         Predict a location from Wi-Fi readings
-  `GET`         `/live-location`   Retrieve the latest live prediction
-  `POST`        `/navigate`        Predict location and calculate a route
-
-The Android application sends a JSON request containing `scan_readings`
-and `destination` to the `/navigate` endpoint.
-
-## 10. Run the project locally
+## Run the Project Locally
 
 ### Prerequisites
 
--   Python installed
--   Git
--   Android Studio (if building/running the Android client)
--   A compatible Android phone with Wi-Fi and required permissions for
-    live scanning
+- Python installed
+- Git
+- Android Studio (if building or running the Android application)
+- A compatible Android phone for live Wi-Fi scanning
 
-### Step 1: Clone the repository
+### 1. Clone the Repository
 
-``` bash
+```bash
 git clone https://github.com/rajyalakshmi109/AI-Indoor-Navigation.git
 cd AI-Indoor-Navigation
 ```
 
-### Step 2: Create and activate a virtual environment
+### 2. Create and Activate a Virtual Environment
 
 **Windows PowerShell:**
 
-``` powershell
+```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-### Step 3: Install Python dependencies
+### 3. Install Dependencies
 
-``` bash
+```bash
 pip install -r requirements.txt
 ```
 
-### Step 4: Start the Flask backend
+### 4. Start the Flask Backend
 
-``` bash
+```bash
 python api.py
 ```
 
-The development server runs on port `5000` when started using the
-project's local entry point.
+The local development API runs on port `5000` when started using the project's development entry point.
 
-### Step 5: Start the Streamlit dashboard
+### 5. Start the Streamlit Dashboard
 
 Open a second terminal, activate the same virtual environment, and run:
 
-``` bash
+```bash
 streamlit run app.py
 ```
 
-For local live-mode testing, set the dashboard API base URL in `app.py`
-to:
+For local live-mode testing, configure the API base URL in `app.py` as:
 
-``` python
+```python
 API_URL = "http://127.0.0.1:5000"
 ```
 
-For the deployed dashboard, use the Render backend URL:
+For the deployed dashboard, the API base URL should point to the hosted backend:
 
-``` python
+```python
 API_URL = "https://ai-indoor-navigation.onrender.com"
 ```
 
-### Android client configuration
+### Android Application Setup
 
-Open the Android project in Android Studio, build and install the app on
-a compatible phone, grant the required permissions, and set the Flask
-API address to the reachable backend URL.
+Open the Android project in Android Studio, build and install the application on a compatible phone, grant the required permissions, and configure the Flask API address.
 
-For local testing, the phone and computer must be on a network that
-allows the phone to reach the computer's IP address and Flask port. For
-deployed testing, use the Render service URL.
+For local testing, the phone and computer must be connected to a network that allows the phone to reach the computer's IP address and Flask port. For deployed testing, configure the application to use the Render service URL.
 
-## 11. Repository structure
+## Repository Structure
 
-``` text
+```text
 AI-Indoor-Navigation/
 ├── dataset/
 │   ├── processed/
 │   └── WiFi_Final_Dataset.xlsx
 ├── maps/
-│   └── route_visualization.py
 ├── models/
 │   ├── random_forest.pkl
 │   └── feature_columns.pkl
+├── .gitignore
+├── README.md
 ├── api.py
 ├── app.py
 ├── compare_models.py
@@ -332,61 +257,49 @@ AI-Indoor-Navigation/
 ├── evaluate_model.py
 ├── location_prediction.py
 ├── navigation.py
+├── requirements.txt
 ├── standardize_labels.py
 ├── test_api.py
 ├── test_navigation_api.py
 ├── test_prediction.py
 ├── train_ann.py
 ├── train_model.py
-├── tune_random_forest.py
-└── requirements.txt
+└── tune_random_forest.py
 ```
 
-The Android application source is maintained separately from the Python
-repository.
+The Android Studio project is maintained separately from this Python repository.
 
-## 12. Limitations
+## Limitations
 
--   The dataset contains 102 labelled fingerprints across 10 locations.
--   The held-out offline test contains only 20 fingerprints.
--   Wi-Fi RSSI varies with walls, people, phone orientation,
-    interference, access-point load and multipath reflections.
--   Some live scans have low overlap with the trained BSSID set.
--   Live checks were limited and do not establish statistically robust
-    accuracy.
--   Route edge weights are approximate; physical route distances require
-    on-site measurement.
--   Performance across multiple phone models, days and collection
-    conditions has not yet been established.
+- The dataset contains 102 fingerprints across 10 reference locations.
+- The held-out offline test set contains only 20 fingerprints.
+- Wi-Fi RSSI varies with walls, people, device orientation, interference, access-point load and multipath effects.
+- Some live scans have low overlap with the trained BSSID set.
+- Live checks were limited and do not establish statistically robust accuracy.
+- Route edge weights are approximate; physical route distances require on-site measurement.
+- Performance across multiple phone models, days and collection conditions has not yet been established.
 
-## 13. Future work
+## Future Work
 
--   Collect more balanced fingerprints at different times, positions and
-    phone orientations.
--   Repeat testing across multiple days and devices.
--   Add a low-AP-coverage or low-confidence fallback that asks the user
-    to rescan.
--   Validate graph connections, floor transitions and route distances
-    on-site.
--   Measure end-to-end latency and route completion rate.
--   Compare localization models using identical session-based evaluation
-    splits.
+- Collect more balanced fingerprints at different times, positions and phone orientations.
+- Repeat testing across multiple days and devices.
+- Add a low-AP-coverage or low-confidence fallback that asks the user to rescan.
+- Validate graph connections, floor transitions and route distances on-site.
+- Measure end-to-end latency and route completion rate.
+- Compare localization models using identical session-based evaluation splits.
 
-## 14. References
+## References
 
-1.  Breiman, L. (2001). Random Forests. *Machine Learning*, 45, 5--32.
-2.  Dijkstra, E. W. (1959). A note on two problems in connexion with
-    graphs. *Numerische Mathematik*, 1, 269--271.
-3.  Android Developers. Wi-Fi scanning and permissions documentation.
-4.  Flask Documentation. Flask web framework documentation.
-5.  Scikit-learn Documentation. `RandomForestClassifier` and
-    classification metrics.
+1. Breiman, L. (2001). Random Forests. *Machine Learning*, 45, 5–32.
+2. Dijkstra, E. W. (1959). A note on two problems in connexion with graphs. *Numerische Mathematik*, 1, 269–271.
+3. Android Developers — Wi-Fi scanning and permissions documentation.
+4. Flask Documentation — Flask web framework.
+5. Scikit-learn Documentation — `RandomForestClassifier` and classification metrics.
 
 ## Contributors
 
 **Project contributors:** 24BCS109, 24BCS071, 24BCS106, 23BCS151.
 
-------------------------------------------------------------------------
+---
 
-*Academic prototype developed for indoor localization and navigation
-within the mapped college building.*
+*Academic prototype developed for indoor localization and navigation within the mapped college building.*
