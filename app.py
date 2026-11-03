@@ -33,74 +33,163 @@ API_URL = "http://127.0.0.1:5000"
 
 st.markdown("""
 <style>
-
 .stApp {
-    background-color: #0b1120;
-    color: #f1f5f9;
+    background-color: #F4F7FB;
+    color: #24344D;
 }
-
 .block-container {
-    padding-top: 2rem;
+    padding-top: 1.8rem;
     padding-bottom: 3rem;
-    max-width: 1450px;
+    max-width: 1380px;
 }
-
 .hero {
-    padding: 30px;
-    border-radius: 18px;
-    background: linear-gradient(120deg, #172554, #164e63);
-    margin-bottom: 25px;
-    border: 1px solid #334155;
+    padding: 26px 30px;
+    border-radius: 14px;
+    background: #FFFFFF;
+    margin-bottom: 24px;
+    border: 1px solid #E2E8F0;
+    border-left: 5px solid #4776A8;
+    box-shadow: 0 2px 8px rgba(30, 55, 90, 0.04);
 }
-
 .hero h1 {
-    color: white;
-    font-size: 35px;
+    color: #243B5A;
+    font-size: 31px;
+    font-weight: 700;
+    margin: 0 0 7px 0;
+}
+.hero p {
+    color: #64748B;
+    font-size: 15px;
+    margin: 0;
+}
+.section-card, .location-card {
+    background: #FFFFFF;
+    padding: 20px 22px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(30, 55, 90, 0.035);
+}
+.location-card {
+    border-left: 4px solid #4776A8;
+}
+.location-card h4 {
+    color: #64748B;
+    font-size: 14px;
+    font-weight: 600;
     margin-bottom: 8px;
 }
-
-.hero p {
-    color: #cbd5e1;
-    font-size: 16px;
+.location-card h3 {
+    color: #243B5A;
+    font-size: 23px;
+    margin: 0 0 6px 0;
 }
-
-.section-card {
-    background-color: #151f32;
-    padding: 22px;
-    border-radius: 15px;
-    border: 1px solid #334155;
-    margin-bottom: 20px;
+.location-card p {
+    color: #64748B;
+    margin: 0;
 }
-
-.location-card {
-    background-color: #123b35;
-    border: 1px solid #16a34a;
-    padding: 18px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-}
-
 div[data-testid="stMetric"] {
-    background-color: #151f32;
-    padding: 15px;
+    background: #FFFFFF;
+    padding: 16px 18px;
     border-radius: 12px;
-    border: 1px solid #334155;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 8px rgba(30, 55, 90, 0.035);
 }
-
+div[data-testid="stMetricLabel"] {
+    color: #64748B;
+}
+div[data-testid="stMetricValue"] {
+    color: #243B5A;
+    font-size: 1.35rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+div[data-baseweb="select"] * {
+    color: #243B5A !important;
+}
 div.stButton > button {
-    background-color: #2563eb;
-    color: white;
-    border-radius: 9px;
-    border: none;
-    padding: 10px 24px;
+    background: #4776A8;
+    color: #FFFFFF;
+    border-radius: 8px;
+    border: 1px solid #4776A8;
+    padding: 9px 20px;
     font-weight: 600;
+    min-height: 42px;
 }
-
 div.stButton > button:hover {
-    background-color: #1d4ed8;
-    color: white;
+    background: #365F8B;
+    border-color: #365F8B;
+    color: #FFFFFF;
 }
-
+div[data-baseweb="select"] > div {
+    background-color: #FFFFFF;
+    border-color: #CBD5E1;
+    border-radius: 8px;
+}
+div[role="radiogroup"] {
+    gap: 16px;
+}
+h1, h2, h3, h4 {
+    color: #243B5A;
+}
+p, label, .stMarkdown {
+    color: #475569;
+}
+button[data-baseweb="tab"] {
+    color: #475569;
+}
+button[data-baseweb="tab"][aria-selected="true"] {
+    color: #365F8B;
+    border-bottom-color: #4776A8;
+}
+hr {
+    border-color: #DCE4EE;
+}
+div[data-testid="stAlert"] {
+    border-radius: 10px;
+}
+/* Section headings and balanced two-column panels */
+.section-heading {
+    color: #243B5A;
+    font-size: 1.12rem;
+    font-weight: 700;
+    margin: 4px 0 12px 0;
+}
+.panel {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 18px 20px;
+    min-height: 100%;
+    box-shadow: 0 2px 8px rgba(30, 55, 90, 0.035);
+}
+.panel-label {
+    color: #64748B;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+}
+.route-item {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 11px 14px;
+    margin: 8px 0;
+    color: #334155;
+}
+.route-step {
+    color: #4776A8;
+    font-weight: 700;
+    margin-right: 8px;
+}
+div[data-testid="stVerticalBlock"] > div:has(> div > .panel) {
+    height: 100%;
+}
+@media (max-width: 800px) {
+    .block-container { padding-left: 1rem; padding-right: 1rem; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -200,7 +289,7 @@ if df.empty:
     st.stop()
 
 # ==================================================
-# MODE SELECTION
+# MODE SELECTION AND LOCATION DETECTION
 # ==================================================
 
 st.subheader("🤖 AI Location Detection")
@@ -215,181 +304,124 @@ predicted_location = None
 confidence = None
 matched_access_points = None
 
-# ==================================================
-# DEMO MODE
-# ==================================================
-
 if mode == "Demo Mode":
 
-    st.info(
-        "Demo Mode: Select a saved Wi-Fi fingerprint "
-        "to simulate AI location prediction."
-    )
+    left_col, right_col = st.columns([1, 1.25], gap="large")
 
-    sample_index = st.selectbox(
-        "Select a Wi-Fi fingerprint",
-        range(len(df)),
-        format_func=lambda x: f"Sample {x + 1}",
-        key="demo_sample"
-    )
-
-    sample = df.iloc[sample_index]
-
-    scan_readings = sample.drop(
-        ["scan_key", "location_id", "location_name", "floor"]
-    ).to_dict()
-
-    try:
-
-        predicted_location, confidence = predict_location(
-            scan_readings
+    with left_col:
+        st.markdown('<div class="panel-label">Demo controls</div>', unsafe_allow_html=True)
+        st.info(
+            "This mode uses Wi-Fi fingerprints collected earlier in the building. "
+            "Each fingerprint contains recorded BSSID and RSSI values. "
+            "The Random Forest model predicts the location from those readings."
         )
 
-    except Exception as error:
+        st.markdown("**Saved Wi-Fi fingerprint records**")
 
-        st.error(f"Prediction failed: {error}")
-        st.stop()
+        def fingerprint_label(index):
+            row = df.iloc[index]
+            actual_location = str(row.get("location_name", "Unknown location"))
+            floor_name = str(row.get("floor", "")).strip()
+            floor_text = f" | {floor_name}" if floor_name and floor_name.lower() != "nan" else ""
+            return f"Fingerprint {index + 1} — {actual_location}{floor_text}"
 
-    st.markdown(
-        f"""
-        <div class="location-card">
-            <h4>📍 Predicted Current Location</h4>
-            <h3>{predicted_location}</h3>
-            <p>Demo prediction using saved Wi-Fi fingerprint</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-
-        st.metric(
-            "AI Prediction Confidence",
-            f"{confidence:.2f}%"
+        sample_index = st.selectbox(
+            "Select a collected fingerprint",
+            range(len(df)),
+            format_func=fingerprint_label,
+            key="demo_sample"
         )
 
-    with col2:
+        sample = df.iloc[sample_index]
+        scan_readings = sample.drop(
+            ["scan_key", "location_id", "location_name", "floor"]
+        ).to_dict()
 
-        st.metric(
-            "Available Fingerprints",
-            len(df)
-        )
+        try:
+            predicted_location, confidence = predict_location(scan_readings)
+        except Exception as error:
+            st.error(f"Prediction failed: {error}")
+            st.stop()
 
-# ==================================================
-# LIVE WI-FI MODE
-# ==================================================
+        st.caption("The selected record is a previously collected Wi-Fi scan. The model prediction is shown separately for comparison with its recorded location.")
 
-else:
-
-    st.info(
-        "Live Mode: Use your Motorola Android application "
-        "to scan nearby Wi-Fi access points and send the scan "
-        "to the Flask API."
-    )
-
-    st.markdown("### 📡 Live Wi-Fi Connection")
-
-    st.write(
-        "1. Open the Android Indoor Navigation application."
-    )
-
-    st.write(
-        "2. Scan Wi-Fi networks and send the scan."
-    )
-
-    st.write(
-        "3. Click the button below to retrieve the latest prediction."
-    )
-
-    if st.button(
-        "🔄 Refresh Latest Wi-Fi Location",
-        use_container_width=True
-    ):
-
-        st.session_state.pop("live_location_data", None)
-
-        result, error = get_live_location()
-
-        if result:
-
-            st.session_state["live_location_data"] = result
-
-        else:
-
-            st.session_state["live_location_error"] = error
-
-    # Display previously retrieved live location
-
-    if "live_location_data" in st.session_state:
-
-        live_data = st.session_state["live_location_data"]
-
-        predicted_location = live_data.get(
-            "current_location"
-        )
-
-        confidence = live_data.get(
-            "confidence"
-        )
-
-        matched_access_points = live_data.get(
-            "matched_access_points"
-        )
-
+    with right_col:
+        st.markdown('<div class="panel-label">Detected location</div>', unsafe_allow_html=True)
         st.markdown(
             f"""
             <div class="location-card">
-                <h4>📍 Live Predicted Current Location</h4>
+                <h4>📍 Predicted Current Location</h4>
                 <h3>{predicted_location}</h3>
-                <p>Location predicted from Android Wi-Fi scan</p>
+                <p>AI prediction using the saved Wi-Fi fingerprint</p>
             </div>
             """,
             unsafe_allow_html=True
         )
+        metric_a, metric_b = st.columns(2)
+        with metric_a:
+            st.metric("AI Confidence", f"{confidence:.2f}%")
+        with metric_b:
+            st.metric("Available Fingerprints", len(df))
 
-        col1, col2, col3 = st.columns(3)
+else:
 
-        with col1:
+    left_col, right_col = st.columns([1, 1.25], gap="large")
 
-            st.metric(
-                "AI Confidence",
-                f"{confidence:.2f}%"
-            )
-
-        with col2:
-
-            st.metric(
-                "Matched Access Points",
-                matched_access_points
-            )
-
-        with col3:
-
-            st.metric(
-                "Model Features",
-                live_data.get("total_model_features", 48)
-            )
-
-        st.caption(
-            "Last scan: " +
-            str(live_data.get("last_updated", "Unknown"))
+    with left_col:
+        st.markdown('<div class="panel-label">Connect your Android device</div>', unsafe_allow_html=True)
+        st.info(
+            "Use the Android application to scan nearby Wi-Fi access points. "
+            "The scan is sent to the Flask API running on this laptop."
         )
+        st.markdown("**How to update your position**")
+        st.write("1. Open the Android Indoor Navigation app.")
+        st.write("2. Scan nearby Wi-Fi networks and send the scan.")
+        st.write("3. Refresh the latest location here.")
 
-        st.success(
-            "Live location retrieved successfully!"
-        )
+        if st.button("🔄 Refresh Latest Wi-Fi Location", use_container_width=True):
+            st.session_state.pop("live_location_data", None)
+            result, error = get_live_location()
+            if result:
+                st.session_state["live_location_data"] = result
+                st.session_state.pop("live_location_error", None)
+            else:
+                st.session_state["live_location_error"] = error
 
-    else:
+    with right_col:
+        st.markdown('<div class="panel-label">Live positioning result</div>', unsafe_allow_html=True)
 
-        st.warning(
-            st.session_state.get(
-                "live_location_error",
-                "Waiting for the first Android Wi-Fi scan. "
-                "Send a scan from your phone and refresh this page."
+        if "live_location_data" in st.session_state:
+            live_data = st.session_state["live_location_data"]
+            predicted_location = live_data.get("current_location")
+            confidence = live_data.get("confidence")
+            matched_access_points = live_data.get("matched_access_points")
+
+            st.markdown(
+                f"""
+                <div class="location-card">
+                    <h4>📍 Live Predicted Current Location</h4>
+                    <h3>{predicted_location}</h3>
+                    <p>Location predicted from the latest Android Wi-Fi scan</p>
+                </div>
+                """,
+                unsafe_allow_html=True
             )
-        )
+
+            metric_a, metric_b, metric_c = st.columns(3)
+            with metric_a:
+                st.metric("AI Confidence", f"{confidence:.2f}%")
+            with metric_b:
+                st.metric("Matched APs", matched_access_points)
+            with metric_c:
+                st.metric("Model Features", live_data.get("total_model_features", 48))
+            st.caption("Last scan: " + str(live_data.get("last_updated", "Unknown")))
+        else:
+            st.warning(
+                st.session_state.get(
+                    "live_location_error",
+                    "Waiting for the first Android Wi-Fi scan. Send a scan and refresh this panel."
+                )
+            )
 
 # ==================================================
 # STOP IF LOCATION IS NOT AVAILABLE
@@ -412,21 +444,25 @@ if predicted_location is None:
 
 st.divider()
 
-st.subheader("🎯 Where Would You Like to Go?")
+st.subheader("🎯 Plan Your Destination")
 
-destination = st.selectbox(
-    "Choose your destination",
-    locations
-)
+destination_col, action_col = st.columns([2, 1], gap="large")
+with destination_col:
+    destination = st.selectbox(
+        "Choose your destination",
+        locations
+    )
+with action_col:
+    find_route_clicked = st.button(
+        "🧭 Find My Shortest Route",
+        use_container_width=True
+    )
 
 # ==================================================
 # SHORTEST ROUTE
 # ==================================================
 
-if st.button(
-    "🧭 Find My Shortest Route",
-    use_container_width=True
-):
+if find_route_clicked:
 
     start = str(predicted_location)
 
@@ -461,19 +497,15 @@ if st.button(
 
                 st.metric(
                     "Starting Location",
-                    "Current Position"
+                    start
                 )
-
-                st.caption(start)
 
             with col2:
 
                 st.metric(
                     "Destination",
-                    "Selected Location"
+                    destination
                 )
-
-                st.caption(destination)
 
             with col3:
 
@@ -488,29 +520,34 @@ if st.button(
             # ROUTE OVERVIEW
             # ------------------------------------------
 
-            st.subheader("🗺️ Route Overview")
+            route_col, directions_col = st.columns([1, 1.25], gap="large")
 
-            for i, location in enumerate(
-                route,
-                start=1
-            ):
-
-                if i == 1:
-
+            with route_col:
+                st.subheader("🗺️ Route Overview")
+                for i, location in enumerate(route, start=1):
+                    if i == 1:
+                        label = "🟢 START"
+                    elif i == len(route):
+                        label = "🔴 DESTINATION"
+                    else:
+                        label = "📍 WAYPOINT"
                     st.markdown(
-                        f"🟢 **START:** {location}"
+                        f'<div class="route-item"><span class="route-step">{label}</span><br>{location}</div>',
+                        unsafe_allow_html=True
                     )
 
-                elif i == len(route):
-
+            with directions_col:
+                st.subheader("🚶 Step-by-Step Directions")
+                instructions = generate_instructions(route)
+                for i, instruction in enumerate(instructions, start=1):
                     st.markdown(
-                        f"🔴 **DESTINATION:** {location}"
-                    )
-
-                else:
-
-                    st.markdown(
-                        f"⬇️ {location}"
+                        f"""
+                        <div class="section-card">
+                            <h4>Step {i}</h4>
+                            <p>{instruction}</p>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
             st.divider()
@@ -589,31 +626,6 @@ if st.button(
                     )
 
             st.divider()
-
-            # ------------------------------------------
-            # WALKING DIRECTIONS
-            # ------------------------------------------
-
-            st.subheader(
-                "🚶 Step-by-Step Walking Directions"
-            )
-
-            instructions = generate_instructions(route)
-
-            for i, instruction in enumerate(
-                instructions,
-                start=1
-            ):
-
-                st.markdown(
-                    f"""
-                    <div class="section-card">
-                        <h4>Step {i}</h4>
-                        <p>{instruction}</p>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
 
             # ------------------------------------------
             # FINAL MESSAGE
